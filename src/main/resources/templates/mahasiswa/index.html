@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Mahasiswa')}"></head>
+<body>
+<div th:replace="~{layout :: navbar(${activePage})}"></div>
+<main class="container-fluid px-3 px-lg-4 py-4">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">CRUD</p>
+            <h1>Data Mahasiswa</h1>
+        </div>
+        <a th:href="@{/mahasiswa/new}" class="btn btn-primary"><i class="bi bi-person-plus"></i> Tambah</a>
+    </div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <section class="content-panel">
+        <form th:action="@{/mahasiswa}" method="get" class="row g-2 align-items-center mb-3">
+            <div class="col-12 col-md">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input name="keyword" class="form-control" th:value="${keyword}" placeholder="Cari nama, NIM, atau program studi">
+                </div>
+            </div>
+            <div class="col-6 col-md-auto">
+                <button class="btn btn-outline-primary w-100" type="submit">Cari</button>
+            </div>
+            <div class="col-6 col-md-auto">
+                <a class="btn btn-outline-secondary w-100" th:href="@{/mahasiswa}">Reset</a>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table align-middle data-table">
+                <thead><tr><th>NIM</th><th>Nama</th><th>Program Studi</th><th>Angkatan</th><th>Email</th><th class="text-end">Aksi</th></tr></thead>
+                <tbody>
+                <tr th:each="item : ${mahasiswaPage.content}">
+                    <td class="fw-semibold" th:text="${item.nim}">NIM</td>
+                    <td th:text="${item.nama}">Nama</td>
+                    <td><span class="badge text-bg-light" th:text="${item.programStudi}">Prodi</span></td>
+                    <td th:text="${item.angkatan}">2024</td>
+                    <td th:text="${item.email}">email</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-success me-1" th:href="@{/akademik/krs(mahasiswaId=${item.id})}" title="Isi KRS"><i class="bi bi-card-checklist"></i> KRS</a>
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/mahasiswa/{id}/edit(id=${item.id})}" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <form th:action="@{/mahasiswa/{id}/delete(id=${item.id})}" method="post" class="d-inline" data-confirm="Hapus data mahasiswa ini?">
+                            <button class="btn btn-sm btn-outline-danger" type="submit" title="Hapus"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${mahasiswaPage.empty}">
+                    <td colspan="6" class="text-center text-secondary py-5">Data mahasiswa tidak ditemukan.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav th:if="${mahasiswaPage.totalPages > 1}">
+            <ul class="pagination justify-content-end mb-0">
+                <li class="page-item" th:classappend="${mahasiswaPage.first} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/mahasiswa(page=${mahasiswaPage.number - 1}, keyword=${keyword})}">Prev</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, mahasiswaPage.totalPages - 1)}" th:classappend="${i == mahasiswaPage.number} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/mahasiswa(page=${i}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${mahasiswaPage.last} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/mahasiswa(page=${mahasiswaPage.number + 1}, keyword=${keyword})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</main>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

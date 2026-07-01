@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Tugas')}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('tugas')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1 fw-bold"><i class="bi bi-journal-text me-2"></i>Daftar Tugas</h4>
+            <p class="text-muted mb-0">Kelola dan lihat tugas perkuliahan</p>
+        </div>
+        <div th:if="${userRole == 'DOSEN'}">
+            <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#createTugasModal">
+                <i class="bi bi-plus-lg me-1"></i> Buat Tugas Baru
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4" th:each="tugas : ${tugasList}">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold text-primary mb-0" th:text="${tugas.judul}"></h5>
+                        <span class="badge bg-danger" th:text="'Deadline: ' + ${#temporals.format(tugas.deadline, 'dd MMM yyyy HH:mm')}"></span>
+                    </div>
+                    <h6 class="card-subtitle mb-3 text-muted" th:text="${tugas.jadwalKuliah.mataKuliah.nama} + ' | ' + ${tugas.jadwalKuliah.dosen.nama}"></h6>
+                    <p class="card-text text-dark" th:text="${tugas.deskripsi}" style="white-space: pre-wrap;"></p>
+                    
+                    <hr>
+                    
+                    <!-- Actions for DOSEN -->
+                    <div th:if="${userRole == 'DOSEN'}" class="d-flex justify-content-end">
+                        <a th:href="@{/tugas/{id}/submissions(id=${tugas.id})}" class="btn btn-outline-primary">
+                            <i class="bi bi-list-check me-1"></i> Lihat Pengumpulan
+                        </a>
+                    </div>
+                    
+                    <!-- Actions for MAHASISWA -->
+                    <div th:if="${userRole == 'MAHASISWA'}">
+                        <form th:action="@{/tugas/submit}" method="post">
+                            <input type="hidden" name="tugasId" th:value="${tugas.id}">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Jawaban / Link Tugas</label>
+                                <textarea class="form-control bg-light" name="jawaban" rows="3" placeholder="Ketik jawaban atau masukkan link Google Drive/Github di sini..."></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success shadow-sm">
+                                    <i class="bi bi-send me-1"></i> Kumpulkan Tugas
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 text-center py-5 text-muted" th:if="${#lists.isEmpty(tugasList)}">
+            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+            <h5>Belum ada tugas</h5>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Create Tugas (DOSEN Only) -->
+<div th:if="${userRole == 'DOSEN'}" class="modal fade" id="createTugasModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Buat Tugas Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form th:action="@{/tugas/create}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Pilih Kelas</label>
+                        <select class="form-select bg-light" name="jadwalKuliahId" required>
+                            <option value="">-- Pilih Kelas --</option>
+                            <option th:each="jk : ${jadwalList}" th:value="${jk.id}" th:text="${jk.mataKuliah.nama} + ' (' + ${jk.hari} + ')'"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Judul Tugas</label>
+                        <input type="text" class="form-control bg-light" name="judul" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Deskripsi / Instruksi</label>
+                        <textarea class="form-control bg-light" name="deskripsi" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Batas Waktu (Deadline)</label>
+                        <input type="datetime-local" class="form-control bg-light" name="deadline" required>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Tugas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

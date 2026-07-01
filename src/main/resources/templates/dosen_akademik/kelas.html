@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Daftar Kelas')}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('kelas_dosen')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="mb-4">
+        <h4 class="mb-1 fw-bold"><i class="bi bi-journal-bookmark-fill me-2"></i>Kelas & Input Nilai</h4>
+        <p class="text-muted mb-0">Kelola kelas yang Anda ampu, masukkan nilai dan absensi mahasiswa</p>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4" th:each="jadwal : ${jadwalList}">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge bg-primary px-3 py-2" th:text="${jadwal.mataKuliah.kode}"></span>
+                        <span class="badge bg-light text-dark border" th:text="${jadwal.totalPertemuan} + ' Pertemuan'"></span>
+                    </div>
+                    <h5 class="card-title fw-bold text-dark mt-3 mb-1" th:text="${jadwal.mataKuliah.nama}"></h5>
+                    <p class="text-muted small mb-4" th:text="${jadwal.mataKuliah.sks} + ' SKS | Semester ' + ${jadwal.mataKuliah.semester}"></p>
+                    
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-calendar-event text-secondary me-2"></i>
+                        <span th:text="${jadwal.hari} + ', ' + ${jadwal.jam}"></span>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-geo-alt text-secondary me-2"></i>
+                        <span th:text="${jadwal.ruangan}"></span>
+                    </div>
+                    
+                    <a th:href="@{/dosen-akademik/kelas/{id}/mahasiswa(id=${jadwal.id})}" class="btn btn-outline-primary w-100">
+                        Kelola Mahasiswa <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 text-center py-5 text-muted" th:if="${#lists.isEmpty(jadwalList)}">
+            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+            <h5>Belum ada jadwal kelas</h5>
+            <p>Anda belum ditugaskan untuk mengajar kelas manapun.</p>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${pengumuman.id == null ? 'Tambah Pengumuman' : 'Edit Pengumuman'})}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('pengumuman')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/pengumuman}" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <div>
+                    <h4 class="mb-1 fw-bold" th:text="${pengumuman.id == null ? 'Tambah Pengumuman Baru' : 'Edit Pengumuman'}"></h4>
+                    <p class="text-muted mb-0">Lengkapi form di bawah ini</p>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+                    <form th:action="${pengumuman.id == null ? '/pengumuman/create' : '/pengumuman/edit/' + pengumuman.id}" th:object="${pengumuman}" method="post">
+                        
+                        <div class="mb-4">
+                            <label for="judul" class="form-label fw-semibold">Judul Pengumuman <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg bg-light" id="judul" th:field="*{judul}" 
+                                   th:classappend="${#fields.hasErrors('judul')} ? 'is-invalid' : ''" placeholder="Masukkan judul pengumuman">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('judul')}" th:errors="*{judul}"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="targetRole" class="form-label fw-semibold">Target Pembaca <span class="text-danger">*</span></label>
+                            <select class="form-select form-select-lg bg-light" id="targetRole" th:field="*{targetRole}"
+                                    th:classappend="${#fields.hasErrors('targetRole')} ? 'is-invalid' : ''">
+                                <option value="ALL">Semua (Dosen & Mahasiswa)</option>
+                                <option value="DOSEN">Khusus Dosen</option>
+                                <option value="MAHASISWA">Khusus Mahasiswa</option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('targetRole')}" th:errors="*{targetRole}"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="isi" class="form-label fw-semibold">Isi Pengumuman <span class="text-danger">*</span></label>
+                            <textarea class="form-control bg-light" id="isi" rows="6" th:field="*{isi}"
+                                      th:classappend="${#fields.hasErrors('isi')} ? 'is-invalid' : ''" placeholder="Ketik isi pengumuman di sini..."></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('isi')}" th:errors="*{isi}"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-5">
+                            <a th:href="@{/pengumuman}" class="btn btn-light px-4">Batal</a>
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="bi bi-save me-1"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

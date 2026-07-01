@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('KRS - Kartu Rencana Studi')}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('krs')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="mb-4">
+        <h4 class="mb-1 fw-bold"><i class="bi bi-card-checklist me-2"></i>Kartu Rencana Studi (KRS)</h4>
+        <p class="text-muted mb-0" th:if="${targetMahasiswa == null}">Kelola mata kuliah yang Anda ambil semester ini</p>
+        <p class="text-primary fw-bold mb-0" th:if="${targetMahasiswa != null}">Mengelola KRS Mahasiswa: <span th:text="${targetMahasiswa.nama} + ' (' + ${targetMahasiswa.nim} + ')'"></span></p>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Mata Kuliah Diambil -->
+    <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold text-primary">Mata Kuliah Yang Diambil</h5>
+        </div>
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th class="px-4">Kode</th>
+                    <th>Mata Kuliah</th>
+                    <th>SKS</th>
+                    <th>Dosen</th>
+                    <th>Jadwal & Ruang</th>
+                    <th class="text-center px-4">Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="krs : ${krsList}">
+                    <td class="px-4 fw-semibold" th:text="${krs.jadwalKuliah.mataKuliah.kode}"></td>
+                    <td th:text="${krs.jadwalKuliah.mataKuliah.nama}"></td>
+                    <td th:text="${krs.jadwalKuliah.mataKuliah.sks}"></td>
+                    <td th:text="${krs.jadwalKuliah.dosen.nama}"></td>
+                    <td>
+                        <span class="badge bg-info text-dark me-1" th:text="${krs.jadwalKuliah.hari} + ' (' + ${krs.jadwalKuliah.jam} + ')'"></span>
+                        <span class="badge bg-secondary" th:text="${krs.jadwalKuliah.ruangan}"></span>
+                    </td>
+                    <td class="text-center px-4">
+                        <form th:action="@{/akademik/krs/batal}" method="post">
+                            <input type="hidden" name="krsId" th:value="${krs.id}">
+                            <input type="hidden" name="mahasiswaId" th:if="${targetMahasiswa != null}" th:value="${targetMahasiswa.id}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Batalkan mata kuliah ini?')">
+                                <i class="bi bi-x-lg"></i> Batal
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(krsList)}">
+                    <td colspan="6" class="text-center py-4 text-muted">Belum ada mata kuliah yang diambil.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tambah Mata Kuliah -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold text-success">Daftar Mata Kuliah Tersedia</h5>
+        </div>
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th class="px-4">Kode</th>
+                    <th>Mata Kuliah</th>
+                    <th>SKS</th>
+                    <th>Dosen</th>
+                    <th>Jadwal & Ruang</th>
+                    <th class="text-center px-4">Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="jadwal : ${jadwalTersedia}">
+                    <td class="px-4 fw-semibold" th:text="${jadwal.mataKuliah.kode}"></td>
+                    <td th:text="${jadwal.mataKuliah.nama}"></td>
+                    <td th:text="${jadwal.mataKuliah.sks}"></td>
+                    <td th:text="${jadwal.dosen.nama}"></td>
+                    <td>
+                        <span class="badge bg-info text-dark me-1" th:text="${jadwal.hari} + ' (' + ${jadwal.jam} + ')'"></span>
+                        <span class="badge bg-secondary" th:text="${jadwal.ruangan}"></span>
+                    </td>
+                    <td class="text-center px-4">
+                        <form th:action="@{/akademik/krs/ambil}" method="post">
+                            <input type="hidden" name="jadwalId" th:value="${jadwal.id}">
+                            <input type="hidden" name="mahasiswaId" th:if="${targetMahasiswa != null}" th:value="${targetMahasiswa.id}">
+                            <button type="submit" class="btn btn-sm btn-success shadow-sm">
+                                <i class="bi bi-plus-lg"></i> Ambil
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(jadwalTersedia)}">
+                    <td colspan="6" class="text-center py-4 text-muted">Semua mata kuliah sudah diambil.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

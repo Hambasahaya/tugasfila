@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${pageTitle})}"></head>
+<body>
+<div th:replace="~{layout :: navbar(${activePage})}"></div>
+<main class="container-fluid px-3 px-lg-4 py-4">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Mahasiswa</p>
+            <h1 th:text="${pageTitle}">Form Mahasiswa</h1>
+        </div>
+        <a th:href="@{/mahasiswa}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Kembali</a>
+    </div>
+    <section class="content-panel form-panel">
+        <form th:action="@{/mahasiswa}" th:object="${mahasiswa}" method="post" class="row g-3">
+            <input type="hidden" th:field="*{id}">
+            <div class="col-12 col-md-6">
+                <label class="form-label">NIM</label>
+                <input th:field="*{nim}" class="form-control" th:classappend="${#fields.hasErrors('nim')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{nim}"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Nama</label>
+                <input th:field="*{nama}" class="form-control" th:classappend="${#fields.hasErrors('nama')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{nama}"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Program Studi</label>
+                <input th:field="*{programStudi}" class="form-control" th:classappend="${#fields.hasErrors('programStudi')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{programStudi}"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Angkatan</label>
+                <input th:field="*{angkatan}" class="form-control" th:classappend="${#fields.hasErrors('angkatan')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{angkatan}"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Email</label>
+                <input th:field="*{email}" type="email" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{email}"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label">No HP</label>
+                <input th:field="*{noHp}" class="form-control" th:classappend="${#fields.hasErrors('noHp')} ? 'is-invalid' : ''">
+                <div class="invalid-feedback" th:errors="*{noHp}"></div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Alamat</label>
+                <textarea th:field="*{alamat}" rows="3" class="form-control" th:classappend="${#fields.hasErrors('alamat')} ? 'is-invalid' : ''"></textarea>
+                <div class="invalid-feedback" th:errors="*{alamat}"></div>
+            </div>
+            <div class="col-12 d-flex justify-content-end gap-2">
+                <a th:href="@{/mahasiswa}" class="btn btn-light">Batal</a>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Simpan</button>
+            </div>
+        </form>
+    </section>
+</main>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

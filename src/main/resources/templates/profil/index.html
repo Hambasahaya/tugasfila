@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Profil Saya')}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('profil')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="mb-4">
+        <h4 class="mb-1 fw-bold"><i class="bi bi-person-circle me-2"></i>Profil Saya</h4>
+        <p class="text-muted mb-0">Informasi detail akun Anda</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm overflow-hidden">
+                <div class="bg-primary text-white text-center py-5" style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                    <div class="d-inline-flex justify-content-center align-items-center bg-white text-primary rounded-circle shadow-sm mb-3" style="width: 100px; height: 100px; font-size: 3rem;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    
+                    <!-- Admin View -->
+                    <div th:if="${userRole == 'ADMIN'}">
+                        <h3 class="fw-bold mb-0">Administrator</h3>
+                        <p class="text-white-50 mb-0">Sistem Informasi Akademik</p>
+                    </div>
+
+                    <!-- Mahasiswa View -->
+                    <div th:if="${userRole == 'MAHASISWA' && mahasiswa != null}">
+                        <h3 class="fw-bold mb-0" th:text="${mahasiswa.nama}">Nama Mahasiswa</h3>
+                        <p class="text-white-50 mb-0" th:text="'Mahasiswa - ' + ${mahasiswa.programStudi}"></p>
+                    </div>
+
+                    <!-- Dosen View -->
+                    <div th:if="${userRole == 'DOSEN' && dosen != null}">
+                        <h3 class="fw-bold mb-0" th:text="${dosen.nama}">Nama Dosen</h3>
+                        <p class="text-white-50 mb-0" th:text="'Dosen - ' + ${dosen.keahlian}"></p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-lg-5">
+                    
+                    <!-- Admin Info -->
+                    <div th:if="${userRole == 'ADMIN'}">
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Username</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${username}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Role</div>
+                            <div class="col-sm-8 fw-semibold"><span class="badge bg-danger">ADMIN</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Mahasiswa Info -->
+                    <div th:if="${userRole == 'MAHASISWA' && mahasiswa != null}">
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-4">Informasi Akademik</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Nomor Induk Mahasiswa (NIM)</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.nim}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Program Studi</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.programStudi}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Angkatan</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.angkatan}"></div>
+                        </div>
+                        
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-4 mt-5">Kontak & Personal</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Email</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.email}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Nomor HP</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.noHp}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Alamat</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${mahasiswa.alamat}"></div>
+                        </div>
+                    </div>
+
+                    <!-- Dosen Info -->
+                    <div th:if="${userRole == 'DOSEN' && dosen != null}">
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-4">Informasi Akademik</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">NIDN</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${dosen.nidn}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Jabatan</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${dosen.jabatan}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Keahlian</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${dosen.keahlian}"></div>
+                        </div>
+                        
+                        <h5 class="fw-bold text-primary border-bottom pb-2 mb-4 mt-5">Kontak & Personal</h5>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Email</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${dosen.email}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Nomor HP</div>
+                            <div class="col-sm-8 fw-semibold" th:text="${dosen.noHp}"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Kelola Kelas & Nilai')}"></head>
+<body class="bg-light">
+
+<nav th:replace="~{layout :: navbar('kelas_dosen')}"></nav>
+
+<div class="container py-4 px-3 px-lg-4">
+    <div class="d-flex align-items-center mb-4">
+        <a th:href="@{/dosen-akademik/kelas}" class="btn btn-outline-secondary rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        <div>
+            <h4 class="mb-1 fw-bold">Kelola Kelas: <span th:text="${jadwal.mataKuliah.nama}"></span></h4>
+            <p class="text-muted mb-0" th:text="${jadwal.hari} + ', ' + ${jadwal.jam} + ' | ' + ${jadwal.ruangan} + ' | ' + ${jadwal.totalPertemuan} + ' Pertemuan'"></p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0 table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th class="px-4">NIM</th>
+                    <th>Nama Mahasiswa</th>
+                    <th class="text-center" colspan="4">Absensi (H/I/S/A)</th>
+                    <th class="text-center">Persentase</th>
+                    <th class="text-center">Nilai Angka</th>
+                    <th class="text-center">Nilai Huruf</th>
+                    <th class="text-center px-4">Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="krs : ${krsList}">
+                    <td class="px-4 fw-semibold" th:text="${krs.mahasiswa.nim}"></td>
+                    <td th:text="${krs.mahasiswa.nama}"></td>
+                    <form th:action="@{/dosen-akademik/kelas/nilai}" method="post">
+                        <input type="hidden" name="krsId" th:value="${krs.id}">
+                        <td style="width: 60px;"><input type="number" class="form-control form-control-sm text-center px-1" name="jumlahHadir" th:value="${krs.jumlahHadir}" min="0" title="Hadir"></td>
+                        <td style="width: 60px;"><input type="number" class="form-control form-control-sm text-center px-1" name="jumlahIzin" th:value="${krs.jumlahIzin}" min="0" title="Izin"></td>
+                        <td style="width: 60px;"><input type="number" class="form-control form-control-sm text-center px-1" name="jumlahSakit" th:value="${krs.jumlahSakit}" min="0" title="Sakit"></td>
+                        <td style="width: 60px;"><input type="number" class="form-control form-control-sm text-center px-1" name="jumlahAlpa" th:value="${krs.jumlahAlpa}" min="0" title="Alpa"></td>
+                        <td class="text-center">
+                            <div th:with="persen=${krs.getPersentaseKehadiran()}"
+                                 class="badge"
+                                 th:classappend="${persen < 75.0 ? 'bg-danger' : 'bg-success'}"
+                                 th:text="${#numbers.formatDecimal(persen, 1, 1)} + '%'">
+                            </div>
+                        </td>
+                        <td style="width: 90px;"><input type="number" step="0.01" class="form-control form-control-sm text-center" name="nilaiAngka" th:value="${krs.nilaiAngka}" min="0" max="100"></td>
+                        <td style="width: 80px;">
+                            <select name="nilaiHuruf" class="form-select form-select-sm">
+                                <option value="" th:selected="${krs.nilaiHuruf == null}">-</option>
+                                <option value="A" th:selected="${krs.nilaiHuruf == 'A'}">A</option>
+                                <option value="B" th:selected="${krs.nilaiHuruf == 'B'}">B</option>
+                                <option value="C" th:selected="${krs.nilaiHuruf == 'C'}">C</option>
+                                <option value="D" th:selected="${krs.nilaiHuruf == 'D'}">D</option>
+                                <option value="E" th:selected="${krs.nilaiHuruf == 'E'}">E</option>
+                            </select>
+                        </td>
+                        <td class="text-center px-4">
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-save"></i> Simpan</button>
+                        </td>
+                    </form>
+                </tr>
+                <tr th:if="${#lists.isEmpty(krsList)}">
+                    <td colspan="10" class="text-center py-4 text-muted">Belum ada mahasiswa yang mengambil kelas ini.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>
