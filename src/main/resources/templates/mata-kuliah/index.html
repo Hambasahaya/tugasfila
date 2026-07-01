@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Mata Kuliah')}"></head>
+<body>
+<div th:replace="~{layout :: navbar(${activePage})}"></div>
+<main class="container-fluid px-3 px-lg-4 py-4">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">CRUD</p>
+            <h1>Data Mata Kuliah</h1>
+        </div>
+        <a th:href="@{/mata-kuliah/new}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah</a>
+    </div>
+    
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
+    <section class="content-panel">
+        <form th:action="@{/mata-kuliah}" method="get" class="row g-2 align-items-center mb-3">
+            <div class="col-12 col-md">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input name="keyword" class="form-control" th:value="${keyword}" placeholder="Cari nama atau kode mata kuliah">
+                </div>
+            </div>
+            <div class="col-6 col-md-auto">
+                <button class="btn btn-outline-primary w-100" type="submit">Cari</button>
+            </div>
+            <div class="col-6 col-md-auto">
+                <a class="btn btn-outline-secondary w-100" th:href="@{/mata-kuliah}">Reset</a>
+            </div>
+        </form>
+        
+        <div class="table-responsive">
+            <table class="table align-middle data-table">
+                <thead>
+                    <tr>
+                        <th>Kode</th>
+                        <th>Nama Mata Kuliah</th>
+                        <th>SKS</th>
+                        <th>Semester</th>
+                        <th class="text-end">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${mataKuliahPage.content}">
+                    <td class="fw-semibold text-primary" th:text="${item.kode}">Kode</td>
+                    <td th:text="${item.nama}">Nama</td>
+                    <td th:text="${item.sks}">2</td>
+                    <td th:text="${item.semester}">1</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/mata-kuliah/{id}/edit(id=${item.id})}" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <form th:action="@{/mata-kuliah/{id}/delete(id=${item.id})}" method="post" class="d-inline" data-confirm="Hapus data mata kuliah ini?">
+                            <button class="btn btn-sm btn-outline-danger" type="submit" title="Hapus"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${mataKuliahPage.empty}">
+                    <td colspan="5" class="text-center text-secondary py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                        Data mata kuliah tidak ditemukan.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <nav th:if="${mataKuliahPage.totalPages > 1}">
+            <ul class="pagination justify-content-end mb-0 mt-3">
+                <li class="page-item" th:classappend="${mataKuliahPage.first} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/mata-kuliah(page=${mataKuliahPage.number - 1}, keyword=${keyword})}">Prev</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, mataKuliahPage.totalPages - 1)}" th:classappend="${i == mataKuliahPage.number} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/mata-kuliah(page=${i}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${mataKuliahPage.last} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/mata-kuliah(page=${mataKuliahPage.number + 1}, keyword=${keyword})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</main>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

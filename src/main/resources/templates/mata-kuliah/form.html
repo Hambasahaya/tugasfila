@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${pageTitle})}"></head>
+<body>
+<div th:replace="~{layout :: navbar(${activePage})}"></div>
+<main class="container-fluid px-3 px-lg-4 py-4">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Form</p>
+            <h1 th:text="${pageTitle}">Tambah Mata Kuliah</h1>
+        </div>
+        <a th:href="@{/mata-kuliah}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Kembali</a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="content-panel">
+                <form th:action="@{${mataKuliah.id == null ? '/mata-kuliah' : '/mata-kuliah'}}" method="post" th:object="${mataKuliah}">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="mb-3">
+                        <label class="form-label">Kode Mata Kuliah <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('kode')} ? 'is-invalid' : ''" th:field="*{kode}">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('kode')}" th:errors="*{kode}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nama Mata Kuliah <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('nama')} ? 'is-invalid' : ''" th:field="*{nama}">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nama')}" th:errors="*{nama}"></div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label">SKS <span class="text-danger">*</span></label>
+                            <input type="number" min="1" max="6" class="form-control" th:classappend="${#fields.hasErrors('sks')} ? 'is-invalid' : ''" th:field="*{sks}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('sks')}" th:errors="*{sks}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Semester <span class="text-danger">*</span></label>
+                            <input type="number" min="1" max="8" class="form-control" th:classappend="${#fields.hasErrors('semester')} ? 'is-invalid' : ''" th:field="*{semester}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-1"></i> Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

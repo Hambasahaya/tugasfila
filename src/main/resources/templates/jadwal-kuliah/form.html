@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${pageTitle})}"></head>
+<body>
+<div th:replace="~{layout :: navbar(${activePage})}"></div>
+<main class="container-fluid px-3 px-lg-4 py-4">
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Form</p>
+            <h1 th:text="${pageTitle}">Tambah Jadwal Kuliah</h1>
+        </div>
+        <a th:href="@{/jadwal-kuliah}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Kembali</a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="content-panel">
+                <form th:action="@{${jadwalKuliah.id == null ? '/jadwal-kuliah' : '/jadwal-kuliah'}}" method="post" th:object="${jadwalKuliah}">
+                    <input type="hidden" th:field="*{id}">
+                    
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">Informasi Utama (Plotting)</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Mata Kuliah <span class="text-danger">*</span></label>
+                            <select class="form-select" th:classappend="${#fields.hasErrors('mataKuliah')} ? 'is-invalid' : ''" th:field="*{mataKuliah}">
+                                <option value="" disabled selected>-- Pilih Mata Kuliah --</option>
+                                <option th:each="mk : ${mataKuliahList}" th:value="${mk.id}" th:text="${mk.nama} + ' (' + ${mk.kode} + ')'"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('mataKuliah')}" th:errors="*{mataKuliah}"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Dosen Pengajar <span class="text-danger">*</span></label>
+                            <select class="form-select" th:classappend="${#fields.hasErrors('dosen')} ? 'is-invalid' : ''" th:field="*{dosen}">
+                                <option value="" disabled selected>-- Pilih Dosen --</option>
+                                <option th:each="dsn : ${dosenList}" th:value="${dsn.id}" th:text="${dsn.nama}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('dosen')}" th:errors="*{dosen}"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2 mb-3">Waktu & Tempat</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hari <span class="text-danger">*</span></label>
+                                <select class="form-select" th:classappend="${#fields.hasErrors('hari')} ? 'is-invalid' : ''" th:field="*{hari}">
+                                    <option value="" disabled selected>-- Pilih Hari --</option>
+                                    <option value="Senin">Senin</option>
+                                    <option value="Selasa">Selasa</option>
+                                    <option value="Rabu">Rabu</option>
+                                    <option value="Kamis">Kamis</option>
+                                    <option value="Jumat">Jumat</option>
+                                    <option value="Sabtu">Sabtu</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('hari')}" th:errors="*{hari}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Jam (Misal: 08:00 - 10:00) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:classappend="${#fields.hasErrors('jam')} ? 'is-invalid' : ''" th:field="*{jam}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('jam')}" th:errors="*{jam}"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ruangan <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:classappend="${#fields.hasErrors('ruangan')} ? 'is-invalid' : ''" th:field="*{ruangan}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('ruangan')}" th:errors="*{ruangan}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Total Pertemuan <span class="text-danger">*</span></label>
+                                <input type="number" min="1" max="24" class="form-control" th:classappend="${#fields.hasErrors('totalPertemuan')} ? 'is-invalid' : ''" th:field="*{totalPertemuan}">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('totalPertemuan')}" th:errors="*{totalPertemuan}"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-1"></i> Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

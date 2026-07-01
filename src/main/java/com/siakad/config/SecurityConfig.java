@@ -17,7 +17,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ERROR).permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/error").permitAll()
                         .requestMatchers("/pengumuman/create", "/pengumuman/edit/**", "/pengumuman/delete/**").hasRole("ADMIN")
-                        .requestMatchers("/mahasiswa/**", "/dosen/**").hasRole("ADMIN")
+                        .requestMatchers("/mahasiswa/**", "/dosen/**", "/mata-kuliah/**", "/jadwal-kuliah/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

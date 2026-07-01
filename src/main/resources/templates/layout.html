@@ -72,6 +72,16 @@
                         <i class="bi bi-person-workspace"></i> Dosen
                     </a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:classappend="${activePage == 'mata-kuliah'} ? 'active' : ''" th:href="@{/mata-kuliah}">
+                        <i class="bi bi-book"></i> Mata Kuliah
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:classappend="${activePage == 'jadwal-kuliah'} ? 'active' : ''" th:href="@{/jadwal-kuliah}">
+                        <i class="bi bi-calendar3"></i> Jadwal Kuliah
+                    </a>
+                </li>
                 <li class="nav-item ms-lg-2">
                     <form th:action="@{/logout}" method="post">
                         <button class="btn btn-light btn-sm" type="submit">
